@@ -1,23 +1,20 @@
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from llm.gemini import get_gemini_llm
+from langchain_core.messages import SystemMessage, HumanMessage
+from llm.factory import get_llm
 
-llm = get_gemini_llm()
-
-routing_prompt = PromptTemplate(
-    input_variables=["topic"],
-    template="""
-Classify the topic below as either:
-- Tech
-- General
-
-Topic: {topic}
-
-Respond with only one word.
-"""
+SYSTEM_ROUTER = SystemMessage(
+    content=(
+        "You are a strict classifier.\n"
+        "Reply with ONLY one word: Tech or General.\n"
+        "No explanations."
+    )
 )
 
-routing_chain = LLMChain(llm=llm, prompt=routing_prompt)
+def classify_topic(topic: str, provider: str) -> str:
+    llm = get_llm(provider)
 
-def classify_topic(topic: str) -> str:
-    return routing_chain.run(topic).strip()
+    response = llm.invoke([
+        SYSTEM_ROUTER,
+        HumanMessage(content=f"Topic: {topic}")
+    ])
+
+    return response.content.strip()

@@ -1,13 +1,13 @@
 from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from llm.gemini import get_gemini_llm
-
-llm = get_gemini_llm()
+from langchain_core.messages import HumanMessage
+from llm.factory import get_llm
+from llm.system_prompt import SYSTEM_MESSAGE
+from utils.clean_output import clean_llm_output
 
 prompt = PromptTemplate(
     input_variables=["topic", "language"],
     template="""
-Write a professional LinkedIn post in {language} about this general topic:
+Write a professional LinkedIn post in {language} about the following topic:
 
 Topic: {topic}
 
@@ -18,7 +18,13 @@ Rules:
 """
 )
 
-chain = LLMChain(llm=llm, prompt=prompt)
+def write_general_post(topic: str, language: str, provider: str) -> str:
+    llm = get_llm(provider)
 
-def write_general_post(topic: str, language: str) -> str:
-    return chain.run(topic=topic, language=language)
+    human_message = HumanMessage(
+        content=prompt.format(topic=topic, language=language)
+    )
+
+    response = llm.invoke([SYSTEM_MESSAGE, human_message])
+
+    return clean_llm_output(response.content)

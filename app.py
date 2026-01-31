@@ -1,31 +1,32 @@
 import streamlit as st
 from services.generator import generate_linkedin_post
 
-st.set_page_config(
-    page_title="AI LinkedIn Post Generator",
-    page_icon="💼"
-)
+st.set_page_config(page_title="AI LinkedIn Generator", page_icon="💼")
 
 st.title("AI-Powered LinkedIn Post Generator")
-st.caption("LangChain + Gemini | Modular Agent System")
 
-topic = st.text_input(
-    "Enter Topic",
-    placeholder="e.g., AI in Healthcare, Remote Work Productivity"
+provider = st.selectbox(
+    "Select AI Model",
+    [
+        "groq",
+        "gemini",
+        "openai",
+    ],
+    format_func=lambda x: {
+        "groq": "Groq (LLaMA – Fast)",
+        "gemini": "Gemini (Free)",
+        "openai": "OpenAI (GPT)",
+    }[x]
 )
 
-language = st.selectbox(
-    "Select Language",
-    ["English", "Bengali", "Spanish", "French"]
-)
+topic = st.text_input("Topic")
+language = st.selectbox("Language", ["English", "Bengali", "Spanish"])
 
-if st.button("Generate Post"):
+if st.button("Generate"):
     if not topic.strip():
-        st.warning("Please enter a topic.")
+        st.warning("Please enter a topic")
     else:
-        with st.spinner("Generating LinkedIn post..."):
-            category, post = generate_linkedin_post(topic, language)
+        with st.spinner("Generating..."):
+            category, post = generate_linkedin_post(topic, language, provider)
 
-        st.success(f" Routed to **{category} Writer Agent**")
-        st.markdown("### Generated LinkedIn Post")
         st.write(post)
