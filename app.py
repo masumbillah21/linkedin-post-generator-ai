@@ -1,7 +1,7 @@
 import streamlit as st
 from services.generator import generate_linkedin_post
 
-st.set_page_config(page_title="AI LinkedIn Generator", page_icon="💼")
+st.set_page_config(page_title="AI LinkedIn Generator", page_icon=":robot_face:")
 
 st.title("AI-Powered LinkedIn Post Generator")
 
