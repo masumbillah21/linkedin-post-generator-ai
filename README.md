@@ -127,6 +127,10 @@ All models use a temperature of 0.7 for creative yet controlled output.
    - Route it to the appropriate writer agent
    - Generate a professional LinkedIn post
 
+## Demo
+
+[AI LinkedIn Post Generator Demo](https://drive.google.com/file/d/1Qqf6_GK2hlvzbatisBdMh1reh78jWgdV/view?usp=share_link)
+
 ## Project Structure
 
 ```text
